@@ -31,21 +31,21 @@ def delete_file(filepath):
     try:
         subprocess.run(["cmd", "/c", f"del {filepath}"], shell=True, check=True)
     except subprocess.CalledProcessError:
-        print(f"Gagal menghapus file {filepath}")
+        print(f"Failed to delete file {filepath}")
 
 def copy_file(source, destination):
     try:
         shutil.copy(source, destination)
-        print(f"File berhasil disalin dari {source} ke {destination}.")
+        print(f"File successfully copied from {source} to {destination}.")
     except Exception as e:
-        print(f"Gagal menyalin file: {e}")
+        print(f"Failed to copy file: {e}")
 
 def kill_process(process_name):
     try:
         subprocess.run(["taskkill", "/F", "/IM", process_name], shell=True, check=True)
-        print(f"Proses {process_name} telah dihentikan.")
+        print(f"Process {process_name} has been terminated.")
     except subprocess.CalledProcessError:
-        print(f"Tidak dapat menghentikan proses {process_name}. Proses mungkin sudah tidak berjalan.")
+        print(f"Unable to terminate process {process_name}. The process may already be stopped.")
 
 def get_file_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
@@ -73,5 +73,5 @@ take_ownership(file_path_64)
 delete_file(file_path_64)
 copy_file(source_file_64, file_path_64)
 
-print("Operasi selesai. Menutup dalam 5 detik...")
+print("Operation complete. Closing in 5 seconds...")
 time.sleep(5)
