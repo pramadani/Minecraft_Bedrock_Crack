@@ -1,0 +1,1 @@
+pyinstaller --onefile --add-data "src/files/System32/Windows.ApplicationModel.Store.dll;files/System32" --add-data "src/files/SysWOW64/Windows.ApplicationModel.Store.dll;files/SysWOW64" src/main.py
