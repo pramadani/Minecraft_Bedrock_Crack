@@ -28,17 +28,24 @@ def take_ownership(filepath):
     subprocess.run(['icacls', filepath, '/grant', f"{os.getlogin()}:F"], shell=True)
 
 def delete_file(filepath):
-    try:
-        subprocess.run(["cmd", "/c", f"del {filepath}"], shell=True, check=True)
-    except subprocess.CalledProcessError:
-        print(f"Failed to delete file {filepath}")
+    while True:
+        try:
+            subprocess.run(["cmd", "/c", f"del {filepath}"], shell=True, check=True)
+            print(f"File {filepath} deleted successfully.")
+            break
+        except Exception:
+            print(f"Failed to delete file {filepath}. Retrying in 10 second...")
+            time.sleep(10)
 
 def copy_file(source, destination):
-    try:
-        shutil.copy(source, destination)
-        print(f"File successfully copied from {source} to {destination}.")
-    except Exception as e:
-        print(f"Failed to copy file: {e}")
+    while True:
+        try:
+            shutil.copy(source, destination)
+            print(f"File successfully copied from {source} to {destination}.")
+            break
+        except Exception:
+            print(f"Failed to copy file {source}. Waiting for closing. Retrying in 10 second...")
+            time.sleep(10)
 
 def kill_process(process_name):
     try:
@@ -54,24 +61,26 @@ def get_file_path(relative_path):
         bundle_dir = os.path.abspath(".")
     return os.path.join(bundle_dir, relative_path)
 
-run_as_admin()
+if __name__ == "__main__":
+    run_as_admin()
 
-kill_process("XboxPcAppFT.exe")
-kill_process("XboxPcApp.exe")
+    kill_process("XboxPcAppFT.exe")
+    kill_process("XboxPcApp.exe")
+    kill_process("XboxPcTray.exe")
 
-file_path_32 = "C:\\Windows\\System32\\Windows.ApplicationModel.Store.dll"
-source_file_32 = get_file_path("files/System32/Windows.ApplicationModel.Store.dll")
+    file_path_32 = "C:\\Windows\\System32\\Windows.ApplicationModel.Store.dll"
+    file_path_64 = "C:\\Windows\\SysWOW64\\Windows.ApplicationModel.Store.dll"
 
-take_ownership(file_path_32)
-delete_file(file_path_32)
-copy_file(source_file_32, file_path_32)
+    source_file_32 = get_file_path("files/System32/Windows.ApplicationModel.Store.dll")
+    source_file_64 = get_file_path("files/SysWOW64/Windows.ApplicationModel.Store.dll")
+    
+    take_ownership(file_path_32)
+    delete_file(file_path_32)
+    copy_file(source_file_32, file_path_32)
 
-file_path_64 = "C:\\Windows\\SysWOW64\\Windows.ApplicationModel.Store.dll"
-source_file_64 = get_file_path("files/SysWOW64/Windows.ApplicationModel.Store.dll")
+    take_ownership(file_path_64)
+    delete_file(file_path_64)
+    copy_file(source_file_64, file_path_64)
 
-take_ownership(file_path_64)
-delete_file(file_path_64)
-copy_file(source_file_64, file_path_64)
-
-print("Operation complete. Closing in 5 seconds...")
-time.sleep(5)
+    print("Operation complete. Closing in 5 seconds...")
+    time.sleep(5)
