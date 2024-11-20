@@ -1,3 +1,5 @@
+Simplified one-click crack for Minecraft: Bedrock Edition.
+
 ### How to Run:
 - Run `main.exe` located inside the `dist` folder.
 
